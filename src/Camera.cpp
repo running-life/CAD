@@ -1,7 +1,7 @@
-#include "eigen_camera.h"
+#include "Camera.h"
 using namespace Eigen;
 
-Camera::Camera():mViewIsUptodate(false), mProjIsUpdate(false) {
+Camera::Camera():mViewIsUptodate(false), mProjIsUptodate(false) {
 	mViewMatrix.setIdentity();
 
 	mFovY = acos(-1.0f) / 3.0;
