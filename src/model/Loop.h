@@ -10,4 +10,5 @@ public:
 	Loop* nextLoop;
 	HalfEdge* lHalfEdges;
 	Face* lFace;
+	bool 
 };

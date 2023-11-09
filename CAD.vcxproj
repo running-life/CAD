@@ -138,7 +138,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\model\Edge.h" />
+    <ClInclude Include="src\model\EulerOperation.h" />
+    <ClInclude Include="src\model\Face.h" />
+    <ClInclude Include="src\model\Loop.h" />
     <ClInclude Include="src\model\Point.h" />
+    <ClInclude Include="src\model\Solid.h" />
     <ClInclude Include="src\model\Vertex.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\stb_image.h" />

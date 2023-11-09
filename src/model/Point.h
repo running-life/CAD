@@ -4,14 +4,15 @@
 class Point {
 public:
 	Point():position(0, 0, 0) {};
+	Point(const Point& p): position(p.x(), p.y(), p.z()) { }
 	Point(double x, double y, double z) : position(x, y, z) {};
-	double x() {
+	double x() const {
 		return position.x();
 	}
-	double y() {
+	double y() const {
 		return position.y();
 	}
-	double z() {
+	double z() const {
 		return position.z();
 	}
 

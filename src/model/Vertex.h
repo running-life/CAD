@@ -6,13 +6,14 @@
 
 class Vertex {
 public:
-	Vertex() {}
-
-	
+	Vertex() : point(nullptr) {}
+	Vertex(const Point& p) {
+		point = new Point(p);
+	}
+	~Vertex() {
+		delete point;
+	}
 	//static std::vector<Vertex*> list;
 private:
-	Point point;
-	unsigned int handle;
-	std::unordered_set<unsigned int> inHalfEdge;
-	std::unordered_set<unsigned int> outHalfEdge;
+	Point* point;
 };
