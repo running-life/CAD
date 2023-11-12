@@ -6,6 +6,29 @@ class Face {
 public:
 	Face() : preFace(nullptr), nextFace(nullptr), fLoopsInner(nullptr), fLoopsOuter(nullptr), fSolid(nullptr) {
 	}
+
+	~Face() {
+		Loop* tempLoop = fLoopsOuter;
+		if (tempLoop) {
+			tempLoop->preLoop->nextLoop = nullptr;
+		}
+		
+		while (tempLoop) {
+			tempLoop = tempLoop->nextLoop;
+			delete tempLoop->preLoop;
+		}
+
+		tempLoop = fLoopsInner;
+		if (tempLoop) {
+			tempLoop->preLoop->nextLoop = nullptr;
+		}
+
+		while (tempLoop) {
+			tempLoop = tempLoop->nextLoop;
+			delete tempLoop->preLoop;
+		}
+	}
+
 	void addLoop(Loop* loop) {
 		loop->lFace = this;
 		Loop* tempLoop;

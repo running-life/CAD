@@ -60,4 +60,16 @@ class EulerOperation {
 		loop->lFace->fSolid->deleteEdge(edgeV1V2);
 	}
 
+	/**
+	 * @brief convert face2 to a inner loop of face1
+	 * @param face1 we'll add a loop into this face
+	 * @param face2 we assume face2 contain only one loop
+	*/
+	static void kfmrh(Face* face1, Face* face2) {
+		face2->fLoopsOuter->isInner = true;
+		face1->addLoop(face2->fLoopsOuter);
+		face2->fLoopsOuter = nullptr;
+		face2->fSolid->deleteFace(face2);
+	}
+
 };

@@ -19,6 +19,12 @@ public:
 		sFaces->preFace = face;
 	}
 
+	void deleteFace(Face* face) {
+		face->preFace->nextFace = face->nextFace;
+		face->nextFace = face->preFace;
+		delete face;
+	}
+
 	void addEdge(Edge* edge) {
 		if (!edges) {
 			edges = edge;
