@@ -60,8 +60,30 @@ public:
 		return newLoop;
 	}
 
+	/**
+	 * @brief delete an edge and split origin loop. After splitting, this loop contain v1
+	 * @param v1 vertex1
+	 * @param v2 vertex2
+	 * @param edge edge contain v1 and v2
+	 * @return 
+	*/
 	Loop* deleteEdgeSplitLoop(Vertex* v1, Vertex* v2, Edge*& edge) {
 		// find the half-edge from v1 to v2
+		HalfEdge* heV1ToV2 = findHE(v1, v2);
+		edge = heV1ToV2->edge;
+		
+		// inner ring
+		Loop* innerLoop = new Loop();
+		HalfEdge* heV2ToV1 = heV1ToV2->twin;
+		heV2ToV1->pre->nxt = heV1ToV2->nxt;
+		heV1ToV2->nxt->pre = heV2ToV1->pre;
+		innerLoop->lHalfEdges = heV1ToV2->nxt;
+
+		// outer loop
+		heV2ToV1->nxt->pre = heV1ToV2->pre;
+		heV1ToV2->pre->nxt = heV2ToV1->nxt;
+
+		return innerLoop;
 	}
 
 
@@ -82,7 +104,7 @@ public:
 		return tempHE;
 	}
 
-	HalfEdge* findHE(Vertex* v1, Vertex v2) {
+	HalfEdge* findHE(Vertex* v1, Vertex* v2) {
 		HalfEdge* tempHe = lHalfEdges;
 		while (!tempHe) {
 			return nullptr;

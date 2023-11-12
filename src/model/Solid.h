@@ -32,6 +32,13 @@ public:
 		edges->preEdge->nextEdge = edge;
 		edges->preEdge = edge;
 	}
+
+	void deleteEdge(Edge* edge) {
+		edge->preEdge->nextEdge = edge->nextEdge;
+		edge->nextEdge->preEdge = edge->preEdge;
+		delete edge;
+	}
+
 	Solid* preSolid;
 	Solid* nextSolid;
 	Face* sFaces;

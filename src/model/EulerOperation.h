@@ -49,7 +49,15 @@ class EulerOperation {
 	 * @param newLoop inner loop
 	*/
 	static void kemr(Vertex* v1, Vertex* v2, Loop* loop, Loop*& newLoop) {
+		Edge* edgeV1V2 = nullptr;
+		newLoop = loop->deleteEdgeSplitLoop(v1, v2, edgeV1V2);
 
+		// set property
+		newLoop->isInner = true;
+		newLoop->lFace = loop->lFace;
+		
+		loop->lFace->addLoop(newLoop);
+		loop->lFace->fSolid->deleteEdge(edgeV1V2);
 	}
 
 };
