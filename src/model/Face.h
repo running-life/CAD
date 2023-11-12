@@ -4,33 +4,38 @@
 
 class Face {
 public:
-	Face() : preFace(nullptr), nextFace(nullptr), fLoops(nullptr), fSolid(nullptr){
-		// head node
-		fLoops = new Loop;
-		fLoops->nextLoop = fLoops;
-		fLoops->preLoop = fLoops;
+	Face() : preFace(nullptr), nextFace(nullptr), fLoopsInner(nullptr), fLoopsOuter(nullptr), fSolid(nullptr) {
 	}
 	void addLoop(Loop* loop) {
 		loop->lFace = this;
-
-		Loop* tempLoop = fLoops;
-		while (tempLoop->nextLoop != fLoops) {
-			tempLoop = tempLoop->nextLoop;
+		Loop* tempLoop;
+		if (loop->isInner) {
+			if (!fLoopsInner) {
+				fLoopsInner = loop;
+				loop->nextLoop = loop;
+				loop->preLoop = loop;
+				return;
+			}
+			tempLoop = fLoopsInner;
 		}
-		loop->nextLoop = fLoops;
-		loop->preLoop = tempLoop;
-		tempLoop->nextLoop->preLoop = loop;
-		tempLoop->nextLoop = loop;
-	}
-	~Face() {
-		while (fLoops) {
-			Loop* loop;
-			fLoops = fLoops->nextLoop;
-			delete loop;
+		else {
+			if (!fLoopsOuter) {
+				fLoopsOuter = loop;
+				loop->nextLoop = loop;
+				loop->preLoop = loop;
+				return;
+			}
+			tempLoop = fLoopsOuter;
 		}
+		loop->preLoop = tempLoop->preLoop;
+		loop->nextLoop = tempLoop;
+		tempLoop->preLoop->nextLoop = loop;
+		tempLoop->preLoop = loop;
 	}
 	Face* preFace;
 	Face* nextFace;
-	Loop* fLoops;
+	Loop* fLoopsInner;
+	Loop* fLoopsOuter;
+
 	Solid* fSolid;
 };

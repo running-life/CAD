@@ -33,11 +33,22 @@ class EulerOperation {
 		// make an edge
 		Edge* edge = Edge::makeEdge(v1, v2);
 		
-		// find half-edge who points to v1
-		HalfEdge* hePointToV1 = loop->findHE(v1);
-		// find half-edge who points to v2
-		HalfEdge* hePointToV2 = loop->findHE(v1);
+		Loop* newLoop = loop->insertEdgeSplitLoop(v1, v2, edge);
+		newFace = new Face();
+		newFace->addLoop(newLoop);
+		newFace->fSolid = loop->lFace->fSolid;
+		loop->lFace->fSolid->addEdge(edge);
+	}
 
+
+	/**
+	 * @brief delete an edge, make an inner loop
+	 * @param v1 the vertex on outer loop
+	 * @param v2 the vertex on inner loop
+	 * @param loop the large loop(becomes the outer loop latter)
+	 * @param newLoop inner loop
+	*/
+	static void kemr(Vertex* v1, Vertex* v2, Loop* loop, Loop*& newLoop) {
 
 	}
 

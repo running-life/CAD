@@ -27,13 +27,19 @@ public:
 	}
 
 	/**
-	 * @brief this loop contain the half-edge from v1 to v2
-	 * @param hePointToV1 half-edge point to v1
-	 * @param hePointToV2 half-edge point to v2
+	 * @brief insert a new edge and split origin loop. After splitting, this loop contain the half-edge from v1 to v2
+	 * @param v1 vertex1
+	 * @param v2 vertex2
 	 * @param newEdge new edge between v1 and v2
 	 * @return new loop contain the half-edge from v2 to v1
 	*/
-	Loop* splitLoop(HalfEdge* hePointToV1, HalfEdge* hePointToV2, Edge* newEdge) {
+	Loop* insertEdgeSplitLoop(Vertex* v1, Vertex* v2, Edge* newEdge) {
+
+		// find half-edge who points to v1
+		HalfEdge* hePointToV1 = this->findHE(v1);
+		// find half-edge who points to v2
+		HalfEdge* hePointToV2 = this->findHE(v2);
+
 		HalfEdge* hePointToV1Nxt = hePointToV1->nxt;
 		HalfEdge* hePointToV2Nxt = hePointToV2->nxt;
 
@@ -54,6 +60,10 @@ public:
 		return newLoop;
 	}
 
+	Loop* deleteEdgeSplitLoop(Vertex* v1, Vertex* v2, Edge*& edge) {
+		// find the half-edge from v1 to v2
+	}
+
 
 	// TODO: if v doesn't exist in this loop, the function will enter an infinite loop
 	/**
@@ -70,6 +80,17 @@ public:
 			tempHE = tempHE->nxt;
 		}
 		return tempHE;
+	}
+
+	HalfEdge* findHE(Vertex* v1, Vertex v2) {
+		HalfEdge* tempHe = lHalfEdges;
+		while (!tempHe) {
+			return nullptr;
+		}
+		while (tempHe->v1 != v1 && tempHe->v2 != v2) {
+			tempHe = tempHe->nxt;
+		}
+		return tempHe;
 	}
 
 	Loop* preLoop;

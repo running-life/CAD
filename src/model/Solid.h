@@ -4,39 +4,33 @@
 
 class Solid {
 public:
-	Solid():preSolid(nullptr), nextSolid(nullptr), sFaces(nullptr), edges(nullptr) {
-		// head node
-		sFaces = new Face;
-		sFaces->nextFace = sFaces;
-		sFaces->preFace = sFaces;
-
-		edges = new Edge;
-		edges->preEdge = edges;
-		edges->nextEdge = edges;
-
-	}
+	Solid():preSolid(nullptr), nextSolid(nullptr), sFaces(nullptr), edges(nullptr) {}
 	void addFace(Face* face) {
 		face->fSolid = this;
-
-		Face* tempFace = sFaces;
-		while (tempFace->nextFace != sFaces) {
-			tempFace = tempFace->nextFace;
+		if (!sFaces) {
+			sFaces = face;
+			face->nextFace = face;
+			sFaces->preFace = face;
+			return;
 		}
 		face->nextFace = sFaces;
-		face->preFace = tempFace;
-		tempFace->nextFace->preFace = face;
-		tempFace->nextFace = face;
+		face->preFace = sFaces->preFace;
+		sFaces->preFace->nextFace = face;
+		sFaces->preFace = face;
 	}
 
 	void addEdge(Edge* edge) {
-		Edge* tempEdge = edges;
-		while (tempEdge->nextEdge != edges) {
-			tempEdge = tempEdge->nextEdge;
+		if (!edges) {
+			edges = edge;
+			edge->nextEdge = edge;
+			edge->preEdge = edge;
+			return;
 		}
+
 		edge->nextEdge = edges;
-		edge->preEdge = tempEdge;
-		tempEdge->nextEdge->preEdge = edge;
-		tempEdge->nextEdge = edge;
+		edge->preEdge = edges->preEdge;
+		edges->preEdge->nextEdge = edge;
+		edges->preEdge = edge;
 	}
 	Solid* preSolid;
 	Solid* nextSolid;
