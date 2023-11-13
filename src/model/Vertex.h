@@ -1,7 +1,7 @@
 #pragma once
 #include "Point.h"
-#include <unordered_set>
 #include <vector>
+#include <iostream>
 
 
 class Vertex {
@@ -13,6 +13,7 @@ public:
 	~Vertex() {
 		delete point;
 	}
+
 	//static std::vector<Vertex*> list;
 private:
 	Point* point;

@@ -2,16 +2,18 @@
 #include "Solid.h"
 
 class EulerOperation {
+public:
 	
 	/**
 	 * @brief make vertex, face, solid
 	 * @param p input variable, vertex position
 	 * @param vertex output variable, the vertex this function created 
 	 * @param solid output variable, the solid this function created
+	 * @param face new face
 	*/
-	static void mvfs(const Point& p, Vertex*& vertex, Solid*& solid) {
+	static void mvfs(const Point& p, Vertex*& vertex, Solid*& solid, Face*& face) {
 		solid = new Solid;
-		Face* face = new Face;
+		face = new Face;
 		solid->addFace(face);
 		vertex = new Vertex(p);
 	}
@@ -22,13 +24,20 @@ class EulerOperation {
 	 * @param v2p the position of new vertex
 	 * @param loop the loop where the new edge to be constructed is located
 	*/
-	static void mev(Vertex* v1, const Point& v2p, Loop* loop) {
-		Vertex* v2 = new Vertex(v2p);
+	static void mev(Vertex* v1, const Point& v2p, Loop* loop, Vertex*& v2) {
+		v2 = new Vertex(v2p);
 		Edge* edge = Edge::makeEdge(v1, v2);
 		loop->addHalfEdge(edge->firstHalfEdge, edge->secondHalfEdge);
 		loop->lFace->fSolid->addEdge(edge);
 	}
 
+	/**
+	 * @brief make edge, face
+	 * @param v1 vertex1
+	 * @param v2 vertex2
+	 * @param loop the loop which contains v1 and v2
+	 * @param newFace this face contain a new loop which have the half-edge from v2 to v1
+	*/
 	static void mef(Vertex* v1, Vertex* v2, Loop* loop, Face*& newFace) {
 		// make an edge
 		Edge* edge = Edge::makeEdge(v1, v2);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Face.h"
+#include <iostream>
 
 class Solid {
 public:
@@ -44,6 +45,7 @@ public:
 		edge->nextEdge->preEdge = edge->preEdge;
 		delete edge;
 	}
+
 
 	Solid* preSolid;
 	Solid* nextSolid;

@@ -22,6 +22,7 @@ public:
 		position.z() = z;
 	}
 
+
 private:
 	Eigen::Vector3d position;
 };
