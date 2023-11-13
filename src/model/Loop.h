@@ -2,6 +2,8 @@
 #include "Edge.h"
 #include "Face.h"
 
+class Face;
+
 class Loop {
 public:
 	Loop() :preLoop(nullptr), nextLoop(nullptr), lHalfEdges(nullptr), lFace(nullptr), isInner(false) {}
@@ -113,6 +115,23 @@ public:
 			tempHe = tempHe->nxt;
 		}
 		return tempHe;
+	}
+
+	friend std::ostream& operator << (std::ostream& os, const Loop& loop) {
+		if (!loop.lHalfEdges) {
+			return os << std::endl;
+		}
+		int count = 1;
+
+		os << "HE" << count << ":" << (*loop.lHalfEdges);
+		
+		HalfEdge* tempHE = loop.lHalfEdges->nxt;
+		while (tempHE != loop.lHalfEdges) {
+			count++;
+			os << "HE" << count << ":" << (*tempHE);
+			tempHE = tempHE->nxt;
+		}
+		return os;
 	}
 
 	Loop* preLoop;

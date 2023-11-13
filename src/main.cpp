@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "Eigen/Core"
 #include "stb_image.h"
+#include "EulerOperationTest.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -19,7 +20,7 @@ void processInput(GLFWwindow* window);
 const GLuint WIDTH = 1200, HEIGHT = 1200;
 
 
-int main()
+int main1()
 {
     glfwInit();
     // Set all the required options for GLFW
@@ -46,7 +47,7 @@ int main()
     Shader shader("./shader/vertexWithoutColor.shader", "./shader/fragment.shader");
     shader.Use();
 
-
+    constructCube();
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
@@ -100,6 +101,10 @@ int main()
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
+}
+
+int main() {
+    constructCube();
 }
 
 

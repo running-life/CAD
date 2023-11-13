@@ -1,8 +1,28 @@
 #pragma once
 #include "Vertex.h"
-#include "Loop.h"
 
-class HalfEdge;
+class Loop;
+class Edge;
+
+
+class HalfEdge {
+public:
+	HalfEdge() :v1(nullptr), v2(nullptr), twin(nullptr), pre(nullptr), nxt(nullptr), heLoop(nullptr), edge(nullptr) {}
+	HalfEdge(Vertex* _v1, Vertex* _v2) :v1(_v1), v2(_v2), twin(nullptr), pre(nullptr), nxt(nullptr), heLoop(nullptr), edge(nullptr) {}
+
+	friend std::ostream& operator << (std::ostream& os, const HalfEdge& he) {
+		os << (*he.v1) << "->" << (*he.v2) << std::endl;
+		return os;
+	}
+
+	Vertex* v1;		//start vertex
+	Vertex* v2;		//end vertex
+	HalfEdge* twin;
+	HalfEdge* pre;
+	HalfEdge* nxt;
+	Edge* edge;
+	Loop* heLoop;
+};
 
 
 class Edge {
@@ -18,7 +38,7 @@ public:
 	 * @brief make an edge and two half-edges
 	 * @param _v1 one vertex of this edge
 	 * @param _v2 another vertex of this edge
-	 * @return 
+	 * @return new edge
 	*/
 	static Edge* makeEdge(Vertex* _v1, Vertex* _v2) {
 		Edge* edge = new Edge;
@@ -47,15 +67,3 @@ public:
 };
 
 
-class HalfEdge {
-public:
-	HalfEdge():v1(nullptr), v2(nullptr), twin(nullptr), pre(nullptr), nxt(nullptr), heLoop(nullptr){}
-	HalfEdge(Vertex* _v1, Vertex* _v2):v1(_v1), v2(_v2), twin(nullptr), pre(nullptr), nxt(nullptr), heLoop(nullptr) {}
-	Vertex* v1;		//start vertex
-	Vertex* v2;		//end vertex
-	HalfEdge* twin;
-	HalfEdge* pre;
-	HalfEdge* nxt;
-	Edge* edge;
-	Loop* heLoop;
-};

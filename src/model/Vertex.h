@@ -14,6 +14,10 @@ public:
 		delete point;
 	}
 
+	friend std::ostream& operator << (std::ostream& os, const Vertex& v) {
+		os << "(" << v.point->x() << ", " << v.point->y() << ", " << v.point->z() << ")";
+		return os;
+	}
 	//static std::vector<Vertex*> list;
 private:
 	Point* point;

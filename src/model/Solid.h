@@ -3,6 +3,8 @@
 #include "Face.h"
 #include <iostream>
 
+class Face;
+
 class Solid {
 public:
 	Solid():preSolid(nullptr), nextSolid(nullptr), sFaces(nullptr), edges(nullptr) {}
@@ -46,6 +48,21 @@ public:
 		delete edge;
 	}
 
+	/**
+	 * @brief count the number of edges
+	 * @return the number of edges
+	*/
+	int edgeNum() {
+		if (!edges)
+			return 0;
+		int ans = 1;
+		Edge* tempEdge = edges->nextEdge;
+		while (tempEdge != edges) {
+			ans++;
+			tempEdge = tempEdge->nextEdge;
+		}
+		return ans;
+	}
 
 	Solid* preSolid;
 	Solid* nextSolid;
