@@ -42,9 +42,10 @@ Solid* constructCube() {
 	EulerOperation::mef(cubeVertex[7], cubeVertex[6], bottomFaceLoop, backFace);
 
 	Face* leftFace = nullptr;
-	EulerOperation::mef(cubeVertex[4], cubeVertex[7], bottomFaceLoop, leftFace);
+	EulerOperation::mef(cubeVertex[7], cubeVertex[4], bottomFaceLoop, leftFace);
 
-	std::cout << (*topFace);
+	std::cout << (*cubeSolid);
+
 
 	return cubeSolid;
 }

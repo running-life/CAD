@@ -64,6 +64,26 @@ public:
 		return ans;
 	}
 
+	friend std::ostream& operator << (std::ostream& os, const Solid& solid) {
+		os << "++++++++++++++++++++++++++++++++++" << std::endl;
+		if (!solid.sFaces) {
+			os << "++++++++++++++++++++++++++++++++++" << std::endl;
+			return os;
+		}
+		int count = 1;
+		os << "Face" << count << ":" << std::endl;
+		os << (*solid.sFaces);
+		Face* tempFace = solid.sFaces->nextFace;
+		while (tempFace != solid.sFaces) {
+			count++;
+			os << "Face" << count << ":" << std::endl;
+			os << (*tempFace);
+			tempFace = tempFace->nextFace;
+		}
+		os << "++++++++++++++++++++++++++++++++++" << std::endl;
+		return os;
+	}
+
 	Solid* preSolid;
 	Solid* nextSolid;
 	Face* sFaces;

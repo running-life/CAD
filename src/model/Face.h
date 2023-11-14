@@ -62,6 +62,7 @@ public:
 		os << "---------------------------------------------" << std::endl;
 		// outer loop
 		if (!face.fLoopsOuter) {
+			os << "---------------------------------------------" << std::endl;
 			return os;
 		}
 		int count = 1;
@@ -78,13 +79,14 @@ public:
 
 		// inner loop
 		if (!face.fLoopsInner) {
+			os << "---------------------------------------------" << std::endl;
 			return os;
 		}
-		int count = 1;
+		count = 1;
 		os << "inner loop" << count << ":" << std::endl;
 		os << *(face.fLoopsInner);
 
-		Loop* tempLoop = face.fLoopsInner->nextLoop;
+		tempLoop = face.fLoopsInner->nextLoop;
 		while (tempLoop != face.fLoopsInner) {
 			count++;
 			os << "inner loop" << count << ":" << std::endl;
