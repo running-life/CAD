@@ -11,10 +11,13 @@ Solid* constructCube() {
 	Face* topFace = nullptr;
 	EulerOperation::mvfs(cubePoint[0], cubeVertex[0], cubeSolid, topFace);
 
+	
 
 
 	Loop* topFaceLoop = new Loop();
 	topFace->addLoop(topFaceLoop);
+
+	std::cout << (*cubeSolid);
 
 	EulerOperation::mev(cubeVertex[0], cubePoint[1], topFaceLoop, cubeVertex[1]);
 	EulerOperation::mev(cubeVertex[1], cubePoint[2], topFaceLoop, cubeVertex[2]);
@@ -23,7 +26,9 @@ Solid* constructCube() {
 
 
 	Face* bottomFace = nullptr;
-	EulerOperation::mef(cubeVertex[0], cubeVertex[3], topFaceLoop, bottomFace);
+	EulerOperation::mef(cubeVertex[3], cubeVertex[0], topFaceLoop, bottomFace);
+
+	std::cout << (*cubeSolid);
 
 	// chose the bottomFaceLoop
 	Loop* bottomFaceLoop = bottomFace->fLoopsOuter;

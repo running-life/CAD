@@ -43,10 +43,12 @@ public:
 		Edge* edge = Edge::makeEdge(v1, v2);
 		
 		Loop* newLoop = loop->insertEdgeSplitLoop(v1, v2, edge);
+
 		newFace = new Face();
 		newFace->addLoop(newLoop);
 		newFace->fSolid = loop->lFace->fSolid;
 		loop->lFace->fSolid->addEdge(edge);
+		loop->lFace->fSolid->addFace(newFace);
 	}
 
 
