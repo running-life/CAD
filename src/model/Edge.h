@@ -29,10 +29,6 @@ class Edge {
 public:
 	Edge():v1(nullptr), v2(nullptr), firstHalfEdge(nullptr), secondHalfEdge(nullptr), preEdge(nullptr), nextEdge(nullptr) {}
 
-	~Edge() {
-		delete v1;
-		delete v2;
-	}
 
 	/**
 	 * @brief make an edge and two half-edges

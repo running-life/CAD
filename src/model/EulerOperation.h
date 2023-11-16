@@ -84,8 +84,53 @@ public:
 	}
 
 	static void sweep(Face *face, Eigen::Vector3d direction, double d) {
+		HalfEdge* he = nullptr;
+		bool flag = true;
+		for (Loop* loop = face->fLoopsOuter; flag || loop != face->fLoopsOuter; loop = loop->nextLoop) {
+			flag = false;
+			he = loop->lHalfEdges;
+			Vertex* v1 = he->v1;
+			Point newP(((v1->point->position) + d * direction).x(), ((v1->point->position) + d * direction).y(), ((v1->point->position) + d * direction).z());
+			HalfEdge* newHE = nullptr;
+			Vertex* v2 = nullptr;
+			mev(v1, newP, loop, v2);
+			he = he->nxt;
+			Vertex* v= he->v1;
+			while (v != v1) {
+				newP.setPosition(((v->point->position) + d * direction).x(), ((v->point->position) + d * direction).y(), ((v->point->position) + d * direction).z());
+				mev(v, newP, loop, v2);
+				Face* tempFace = nullptr;
+				mef(v2, v1, loop, tempFace);
+				he = he->nxt;
+				v = he->v1;
+			}
+			Face* tempFace = nullptr;
+			mef(v1, v, loop, tempFace);
+		}
 
-		std::cout << "sweep" << std::endl;
+		flag = true;
+		for (Loop* loop = face->fLoopsInner; flag || loop != face->fLoopsInner; loop = loop->nextLoop) {
+			flag = false;
+			he = loop->lHalfEdges;
+			Vertex* v1 = he->v1;
+			Point newP(((v1->point->position) + d * direction).x(), ((v1->point->position) + d * direction).y(), ((v1->point->position) + d * direction).z());
+			HalfEdge* newHE = nullptr;
+			Vertex* v2 = nullptr;
+			mev(v1, newP, loop, v2);
+			he = he->nxt;
+			Vertex* v = he->v1;
+			while (v != v1) {
+				newP.setPosition(((v->point->position) + d * direction).x(), ((v->point->position) + d * direction).y(), ((v->point->position) + d * direction).z());
+				mev(v, newP, loop, v2);
+				Face* tempFace = nullptr;
+				mef(v2, v1, loop, tempFace);
+				he = he->nxt;
+				v = he->v1;
+			}
+			Face* tempFace = nullptr;
+			mef(v1, v, loop, tempFace);
+		}
+
 	}
 	
 
