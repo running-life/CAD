@@ -34,7 +34,7 @@ public:
 	float MouseSensitivity;
 	float Zoom;
 
-	CameraPOV(Eigen::Vector3f position = Eigen::Vector3f(0, 0, 0), Eigen::Vector3f up = Eigen::Vector3f(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(Eigen::Vector3f(0, 0, -1.0f)), MovementSpeed(SPEED),
+	CameraPOV(Eigen::Vector3f position = Eigen::Vector3f(0, 0, 0), Eigen::Vector3f up = Eigen::Vector3f(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(Eigen::Vector3f(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED),
 		MouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
 		Position = position;
 		WorldUp = up;

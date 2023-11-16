@@ -1,4 +1,4 @@
-#define GLEW_STATIC
+﻿#define GLEW_STATIC
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -63,18 +63,34 @@ int main()
     Shader shader("./shader/vertex.shader", "./shader/fragment.shader");
     shader.Use();
 
-
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,
-    };
-
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-    int pointNum = visualCube(VBO, VAO, EBO);
+    std::vector<Eigen::Vector3d> mallPoints;
+    std::vector<unsigned int> mindices;
+    visualCube(mallPoints, mindices);
+
+    std::vector<GLfloat> mvertices;
+    for (const auto& v : mallPoints) {
+        mvertices.push_back(static_cast<GLfloat>(v.x()));
+        mvertices.push_back(static_cast<GLfloat>(v.y()));
+        mvertices.push_back(static_cast<GLfloat>(v.z()));
+    }
+
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, mvertices.size() * sizeof(GL_FLOAT), mvertices.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mindices.size() * sizeof(unsigned int), mindices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+    glEnableVertexAttribArray(0);
+
+
 
     // position
     //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (GLvoid*)0);
@@ -86,6 +102,12 @@ int main()
 
 
     // Game loop
+
+    Eigen::Matrix4f projection = getProjectionMatrixTest();
+    Eigen::Matrix4f view = camera.GetViewMatrix();
+    std::cout << projection;
+    std::cout << view;
+
     
     while (!glfwWindowShouldClose(window))
     {
@@ -98,7 +120,7 @@ int main()
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
         glBindVertexArray(VAO);
@@ -107,11 +129,16 @@ int main()
         Eigen::Matrix4f projection = getProjectionMatrixTest();
         Eigen::Matrix4f view = camera.GetViewMatrix();
         Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+        Eigen::Matrix4f test;
+        test << 1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1;
         shader.setMat4("view", view);
-        shader.setMat4("model", model);
+        shader.setMat4("model", test);
         shader.setMat4("projection", projection);
 
-        glDrawElements(GL_TRIANGLES, pointNum, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         
 
         // Swap the screen buffers

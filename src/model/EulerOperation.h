@@ -83,4 +83,9 @@ public:
 		face2->fSolid->deleteFace(face2);
 	}
 
+	static void sweep() {
+		std::cout << "sweep" << std::endl;
+	}
+	
+
 };

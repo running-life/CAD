@@ -13,17 +13,13 @@ double max(double x1, double x2, double x3);
 double min(double x1, double x2, double x3);
 
 
-
-int visualCube(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO) {
+void visualCube(std::vector<Eigen::Vector3d>& allPoints, std::vector<unsigned int>& indices) {
 	Solid* cube = constructCube();
 	std::vector<Point*> outer;
 	std::vector<std::vector<Point*>> inner;
 	std::vector<Eigen::Vector3d> visualPoints;
 	std::vector<std::vector<vPoint>> polygon;
 	int faceNum = cube->faceNum();
-	std::cout << "face num:" << faceNum << std::endl;
-	std::vector<Eigen::Vector3d> allPoints;
-	std::vector<int> indices;
 	Face* currFace = cube->sFaces;
 	for (int i = 0; i < faceNum; ++i) {
 		outer.clear();
@@ -34,10 +30,37 @@ int visualCube(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO) {
 		inner = currFace->getInnerLoopPoints();
 		int currPointNum = allPoints.size();
 		setPointAndPolygon(outer, inner, visualPoints, polygon);
-		for (auto& temp : polygon[0]) {
-			std::cout << temp[0] << " " << temp[1] << std::endl;
-		}
-		std::vector<int> tempIndices = mapbox::earcut<int>(polygon);
+		std::vector<unsigned int> tempIndices = mapbox::earcut<unsigned>(polygon);
+		allPoints.insert(allPoints.end(), visualPoints.begin(), visualPoints.end());
+		std::transform(std::begin(tempIndices), std::end(tempIndices), std::back_inserter(indices), [&](double i) {
+			return i + currPointNum;
+			});
+		currFace = currFace->nextFace;
+	}
+}
+
+
+int visualCube(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO) {
+	Solid* cube = constructCube();
+	std::vector<Point*> outer;
+	std::vector<std::vector<Point*>> inner;
+	std::vector<Eigen::Vector3d> visualPoints;
+	std::vector<std::vector<vPoint>> polygon;
+	int faceNum = cube->faceNum();
+	std::cout << "face num:" << faceNum << std::endl;
+	std::vector<Eigen::Vector3d> allPoints;
+	std::vector<unsigned int> indices;
+	Face* currFace = cube->sFaces;
+	for (int i = 0; i < faceNum; ++i) {
+		outer.clear();
+		inner.clear();
+		visualPoints.clear();
+		polygon.clear();
+		outer = currFace->getOuterLoopPoints();
+		inner = currFace->getInnerLoopPoints();
+		int currPointNum = allPoints.size();
+		setPointAndPolygon(outer, inner, visualPoints, polygon);
+		std::vector<unsigned int> tempIndices = mapbox::earcut<unsigned int>(polygon);
 		std::cout << "tempIndices" << tempIndices.size() << std::endl;
 		allPoints.insert(allPoints.end(), visualPoints.begin(), visualPoints.end());
 		std::transform(std::begin(tempIndices), std::end(tempIndices), std::back_inserter(indices), [&](double i) {
@@ -49,7 +72,7 @@ int visualCube(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO) {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, allPoints.size() * 3 * sizeof(GLdouble), allPoints.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, allPoints.size() * sizeof(Eigen::Vector3d), allPoints.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLint), indices.data(), GL_STATIC_DRAW);
