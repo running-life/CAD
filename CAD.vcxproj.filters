@@ -48,6 +48,9 @@
     <ClInclude Include="src\test\EulerOperationTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\test\visual.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
