@@ -137,7 +137,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\CameraPOV.h" />
+    <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\model\Edge.h" />
     <ClInclude Include="src\model\EulerOperation.h" />
     <ClInclude Include="src\model\Face.h" />
@@ -149,10 +150,10 @@
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\test\EulerOperationTest.h" />
     <ClInclude Include="src\visual\earcut.h" />
-    <ClInclude Include="src\visual\Triangle.h" />
+    <ClInclude Include="src\visual\testVisual.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
