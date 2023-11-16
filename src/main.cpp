@@ -12,6 +12,7 @@
 #include "EulerOperationTest.h"
 #include "earcut.h"
 #include "CameraPOV.h"
+#include "testVisual.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -24,7 +25,7 @@ Eigen::Matrix4f getProjectionMatrixTest();
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 800;
-CameraPOV camera(Eigen::Vector3f({ 3.0f, 0.0f, 0.0f }));
+CameraPOV camera(Eigen::Vector3f({ 0.0f, 0.0f, 0.0f }));
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -69,24 +70,23 @@ int main()
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,
     };
 
-    GLuint VBO, VAO;
+    unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glGenBuffers(1, &EBO);
+    int pointNum = visualCube(VBO, VAO, EBO);
 
     // position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (GLvoid*)0);
+    //glEnableVertexAttribArray(0);
     // color
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
 
 
 
     // Game loop
+    
     while (!glfwWindowShouldClose(window))
     {
         float curFrame = static_cast<float>(glfwGetTime());
@@ -111,14 +111,16 @@ int main()
         shader.setMat4("model", model);
         shader.setMat4("projection", projection);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, pointNum, GL_UNSIGNED_INT, 0);
         
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
     }
+    
     // Properly de-allocate all resources once they've outlived their purpose
     glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);
 
     // Terminate GLFW, clearing any resources allocated by GLFW.

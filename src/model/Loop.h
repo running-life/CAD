@@ -117,6 +117,24 @@ public:
 		return tempHe;
 	}
 
+	std::vector<Point*> getPoints() {
+		std::vector<Point*> ans;
+		if (!lHalfEdges) {
+			return ans;
+		}
+		ans.push_back(lHalfEdges->v1->point);
+		HalfEdge* tempHE = lHalfEdges->nxt;
+		while (tempHE != lHalfEdges) {
+			ans.push_back(tempHE->v1->point);
+			tempHE = tempHE->nxt;
+		}
+		// if there is noly one half-edge in this loop
+		if (ans.size() == 1) {
+			ans.push_back(lHalfEdges->v2->point);
+		}
+		return ans;
+	}
+
 	friend std::ostream& operator << (std::ostream& os, const Loop& loop) {
 		if (!loop.lHalfEdges) {
 			return os << std::endl;

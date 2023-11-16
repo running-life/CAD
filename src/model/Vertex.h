@@ -19,6 +19,5 @@ public:
 		return os;
 	}
 	//static std::vector<Vertex*> list;
-private:
 	Point* point;
 };

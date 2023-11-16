@@ -2,7 +2,7 @@
 #include "EulerOperation.h"
 
 Solid* constructCube() {
-	std::cout << "begin to construct" << std::endl;
+	
 	Point cubePoint[] = { {0.5, -0.5, 0.5}, {0.5, 0.5, 0.5}, {-0.5, 0.5, 0.5}, {-0.5, -0.5, 0.5}, 
 					 {0.5, -0.5, -0.5} , {0.5, 0.5, -0.5} , {-0.5, 0.5, -0.5} , {-0.5, -0.5, -0.5} };
 
@@ -17,7 +17,7 @@ Solid* constructCube() {
 	Loop* topFaceLoop = new Loop();
 	topFace->addLoop(topFaceLoop);
 
-	std::cout << (*cubeSolid);
+	// std::cout << (*cubeSolid);
 
 	EulerOperation::mev(cubeVertex[0], cubePoint[1], topFaceLoop, cubeVertex[1]);
 	EulerOperation::mev(cubeVertex[1], cubePoint[2], topFaceLoop, cubeVertex[2]);
@@ -28,7 +28,7 @@ Solid* constructCube() {
 	Face* bottomFace = nullptr;
 	EulerOperation::mef(cubeVertex[3], cubeVertex[0], topFaceLoop, bottomFace);
 
-	std::cout << (*cubeSolid);
+	// std::cout << (*cubeSolid);
 
 	// chose the bottomFaceLoop
 	Loop* bottomFaceLoop = bottomFace->fLoopsOuter;
@@ -49,7 +49,7 @@ Solid* constructCube() {
 	Face* leftFace = nullptr;
 	EulerOperation::mef(cubeVertex[7], cubeVertex[4], bottomFaceLoop, leftFace);
 
-	std::cout << (*cubeSolid);
+	// std::cout << (*cubeSolid);
 
 
 	return cubeSolid;

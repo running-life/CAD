@@ -58,6 +58,26 @@ public:
 		tempLoop->preLoop = loop;
 	}
 
+	// assume we have only one outer loop int one face when call this function
+	std::vector<Point*> getOuterLoopPoints() {
+		Loop* tempLoop = fLoopsOuter;
+		return fLoopsOuter->getPoints();
+	}
+
+	std::vector<std::vector<Point*> > getInnerLoopPoints() {
+		std::vector<std::vector<Point*> > ans;
+		if (!fLoopsInner) {
+			return ans;
+		}
+		ans.push_back(fLoopsInner->getPoints());
+		Loop* tempLoop = fLoopsInner->nextLoop;
+		while (tempLoop != fLoopsInner) {
+			ans.push_back(tempLoop->getPoints());
+			tempLoop = tempLoop->nextLoop;
+		}
+		return ans;
+	}
+
 	friend std::ostream& operator << (std::ostream& os, const Face& face) {
 		os << "---------------------------------------------" << std::endl;
 		// outer loop
