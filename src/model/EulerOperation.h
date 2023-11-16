@@ -83,7 +83,8 @@ public:
 		face2->fSolid->deleteFace(face2);
 	}
 
-	static void sweep() {
+	static void sweep(Face *face, Eigen::Vector3d direction, double d) {
+
 		std::cout << "sweep" << std::endl;
 	}
 	

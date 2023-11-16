@@ -32,7 +32,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-int main()
+int main1()
 {
     glfwInit();
     // Set all the required options for GLFW
@@ -156,7 +156,7 @@ int main()
     return 0;
 }
 
-int main1() {
+int main2() {
     // constructCube();
     // The number type to use for tessellation
     using Coord = double;
@@ -188,6 +188,10 @@ int main1() {
 
 }
 
+int main() {
+    holeTest();
+    return 0;
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
