@@ -45,8 +45,8 @@ public:
 		HalfEdge* hePointToV2 = this->findHE(v2);
 		 *
 		 */
-		
-		// find half-edge who points to v1
+
+		 // find half-edge who points to v1
 		HalfEdge* hePointToV1 = this->findHED(v1, v2);
 
 
@@ -57,10 +57,10 @@ public:
 
 		HalfEdge* hePointToV1Nxt = hePointToV1->nxt;
 		HalfEdge* hePointToV2Nxt = hePointToV2->nxt;
-		
-		if(hePointToV1->nxt != hePointToV1->twin && hePointToV2->nxt == hePointToV2->twin){
+
+		if (hePointToV1->nxt != hePointToV1->twin && isInLoop(hePointToV1->twin) && hePointToV2->nxt == hePointToV2->twin) {
 			hePointToV1->nxt->twin->nxt = newEdge->firstHalfEdge;
-			newEdge->firstHalfEdge = hePointToV1->nxt->twin->nxt;
+			newEdge->firstHalfEdge->pre = hePointToV1->nxt->twin->nxt;
 			newEdge->firstHalfEdge->nxt = hePointToV2->twin;
 			hePointToV2->twin->pre = newEdge->firstHalfEdge->nxt;
 
@@ -86,6 +86,8 @@ public:
 			hePointToV2->nxt = newEdge->secondHalfEdge;
 		}
 
+		lHalfEdges = newEdge->firstHalfEdge;
+
 		return newLoop;
 	}
 
@@ -94,14 +96,14 @@ public:
 	 * @param v1 vertex1
 	 * @param v2 vertex2
 	 * @param edge edge contain v1 and v2
-	 * @return 
+	 * @return
 	*/
 	Loop* deleteEdgeSplitLoop(Vertex* v1, Vertex* v2, Edge*& edge) {
 		// find the half-edge from v1 to v2
 		HalfEdge* heV1ToV2 = findHE(v1, v2);
 
 		edge = heV1ToV2->edge;
-		
+
 		// inner ring
 		Loop* innerLoop = new Loop();
 		HalfEdge* heV2ToV1 = heV1ToV2->twin;
@@ -165,6 +167,19 @@ public:
 			tempHe = tempHe->nxt;
 		}
 		return tempHe;
+	}
+
+	bool isInLoop(HalfEdge* he) {
+		if (!lHalfEdges)
+			return false;
+		HalfEdge* temp = lHalfEdges->nxt;
+		while (temp != lHalfEdges) {
+			if (temp == he) {
+				return true;
+			}
+			temp = temp->nxt;
+		}
+		return false;
 	}
 
 	std::vector<Point*> getPoints() {
