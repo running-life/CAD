@@ -17,7 +17,7 @@ Solid* constructCube() {
 	Loop* topFaceLoop = new Loop();
 	topFace->addLoop(topFaceLoop);
 
-	// std::cout << (*cubeSolid);
+	
 
 	EulerOperation::mev(cubeVertex[0], cubePoint[1], topFaceLoop, cubeVertex[1]);
 	EulerOperation::mev(cubeVertex[1], cubePoint[2], topFaceLoop, cubeVertex[2]);
@@ -28,8 +28,7 @@ Solid* constructCube() {
 	Face* bottomFace = nullptr;
 	EulerOperation::mef(cubeVertex[3], cubeVertex[0], topFaceLoop, bottomFace);
 
-	std::cout << (*topFace);
-
+	
 	// chose the bottomFaceLoop
 	Loop* bottomFaceLoop = bottomFace->fLoopsOuter;
 	EulerOperation::mev(cubeVertex[0], cubePoint[4], bottomFaceLoop, cubeVertex[4]);
@@ -39,17 +38,19 @@ Solid* constructCube() {
 
 	Face* frontFace = nullptr;
 	EulerOperation::mef(cubeVertex[5], cubeVertex[4], bottomFaceLoop, frontFace);
-
+	
 	Face* rightFace = nullptr;
 	EulerOperation::mef(cubeVertex[6], cubeVertex[5], bottomFaceLoop, rightFace);
 
 	Face* backFace = nullptr;
 	EulerOperation::mef(cubeVertex[7], cubeVertex[6], bottomFaceLoop, backFace);
+	
+	
 
 	Face* leftFace = nullptr;
 	EulerOperation::mef(cubeVertex[7], cubeVertex[4], bottomFaceLoop, leftFace);
-
-	// std::cout << (*cubeSolid);
+	
+	std::cout << (*cubeSolid);
 
 
 	return cubeSolid;
@@ -103,6 +104,7 @@ Solid* holeTest() {
 	Face* leftFace = nullptr;
 	EulerOperation::mef(cubeVertex[7], cubeVertex[4], bottomFaceLoop, leftFace);
 
+	std::cout << (*cubeSolid);
 	// std::cout << (*cubeSolid);
 	// make hole
 
@@ -115,13 +117,14 @@ Solid* holeTest() {
 	Face* holeBottomFace = nullptr;
 	EulerOperation::mef(holeVertex[0], holeVertex[3], topFaceLoop, holeBottomFace);
 
-	std::cout << *(holeBottomFace);
+	
 
 	Loop* topFaceInnerLoop = nullptr;
 
 
 	EulerOperation::kemr(cubeVertex[0], holeVertex[0], topFaceLoop, topFaceInnerLoop);
 
+	
 
 	Loop* holeBottomFaceLoop = holeBottomFace->fLoopsOuter;
 	EulerOperation::mev(holeVertex[0], holePoint[4], holeBottomFaceLoop, holeVertex[4]);
@@ -144,6 +147,8 @@ Solid* holeTest() {
 	EulerOperation::kfmrh(bottomFace, holeBottomFace);
 
 	
+	std::cout << (*cubeSolid);
+
 
 	return cubeSolid;
 }

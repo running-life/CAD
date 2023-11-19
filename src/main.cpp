@@ -32,128 +32,134 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-int main1()
+
+int main()
 {
-    glfwInit();
-    // Set all the required options for GLFW
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    if (0) {
+        glfwInit();
+        // Set all the required options for GLFW
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    // Create a GLFW window object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "CAD", nullptr, nullptr);
-    glfwMakeContextCurrent(window);
-    
-    // Set the required callback functions
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+        // Create a GLFW window object that we can use for GLFW's functions
+        GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "CAD", nullptr, nullptr);
+        glfwMakeContextCurrent(window);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        // Set the required callback functions
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetCursorPosCallback(window, mouse_callback);
+        glfwSetScrollCallback(window, scroll_callback);
 
-    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
-    glewExperimental = GL_TRUE;
-    // Initialize GLEW to setup the OpenGL Function pointers
-    glewInit();
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    glEnable(GL_DEPTH_TEST);
+        // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
+        glewExperimental = GL_TRUE;
+        // Initialize GLEW to setup the OpenGL Function pointers
+        glewInit();
 
-    // Define the shader
-    Shader shader("./shader/vertex.shader", "./shader/fragment.shader");
-    shader.Use();
+        glEnable(GL_DEPTH_TEST);
 
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    std::vector<Eigen::Vector3d> mallPoints;
-    std::vector<unsigned int> mindices;
-    visualCube(mallPoints, mindices);
+        // Define the shader
+        Shader shader("./shader/vertex.shader", "./shader/fragment.shader");
+        shader.Use();
 
-    std::vector<GLfloat> mvertices;
-    for (const auto& v : mallPoints) {
-        mvertices.push_back(static_cast<GLfloat>(v.x()));
-        mvertices.push_back(static_cast<GLfloat>(v.y()));
-        mvertices.push_back(static_cast<GLfloat>(v.z()));
-    }
+        unsigned int VBO, VAO, EBO;
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+        std::vector<Eigen::Vector3d> mallPoints;
+        std::vector<unsigned int> mindices;
+        visualCube(mallPoints, mindices);
 
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, mvertices.size() * sizeof(GL_FLOAT), mvertices.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mindices.size() * sizeof(unsigned int), mindices.data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-    glEnableVertexAttribArray(0);
-
-
-
-    // position
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (GLvoid*)0);
-    //glEnableVertexAttribArray(0);
-    // color
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
-
-
-
-    // Game loop
-
-    Eigen::Matrix4f projection = getProjectionMatrixTest();
-    Eigen::Matrix4f view = camera.GetViewMatrix();
-    std::cout << projection;
-    std::cout << view;
-
-    
-    while (!glfwWindowShouldClose(window))
-    {
-        float curFrame = static_cast<float>(glfwGetTime());
-        deltaTime = curFrame - lastFrame;
-        lastFrame = curFrame;
-
-        // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
-        glfwPollEvents();
-        processInput(window);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        std::vector<GLfloat> mvertices;
+        for (const auto& v : mallPoints) {
+            mvertices.push_back(static_cast<GLfloat>(v.x()));
+            mvertices.push_back(static_cast<GLfloat>(v.y()));
+            mvertices.push_back(static_cast<GLfloat>(v.z()));
+        }
 
 
         glBindVertexArray(VAO);
 
-        shader.Use();
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, mvertices.size() * sizeof(GL_FLOAT), mvertices.data(), GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mindices.size() * sizeof(unsigned int), mindices.data(), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+        glEnableVertexAttribArray(0);
+
+
+
+        // position
+        //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (GLvoid*)0);
+        //glEnableVertexAttribArray(0);
+        // color
+        //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        //glEnableVertexAttribArray(1);
+
+
+
+        // Game loop
+
         Eigen::Matrix4f projection = getProjectionMatrixTest();
         Eigen::Matrix4f view = camera.GetViewMatrix();
-        Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
-        Eigen::Matrix4f test;
-        test << 1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1;
-        shader.setMat4("view", view);
-        shader.setMat4("model", test);
-        shader.setMat4("projection", projection);
 
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        
 
-        // Swap the screen buffers
-        glfwSwapBuffers(window);
+        while (!glfwWindowShouldClose(window))
+        {
+            float curFrame = static_cast<float>(glfwGetTime());
+            deltaTime = curFrame - lastFrame;
+            lastFrame = curFrame;
+
+            // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
+            glfwPollEvents();
+            processInput(window);
+
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+            glBindVertexArray(VAO);
+
+            shader.Use();
+            Eigen::Matrix4f projection = getProjectionMatrixTest();
+            Eigen::Matrix4f view = camera.GetViewMatrix();
+            Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+            Eigen::Matrix4f test;
+            test << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            shader.setMat4("view", view);
+            shader.setMat4("model", test);
+            shader.setMat4("projection", projection);
+
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+
+            // Swap the screen buffers
+            glfwSwapBuffers(window);
+        }
+
+        // Properly de-allocate all resources once they've outlived their purpose
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteBuffers(1, &VBO);
+
+        // Terminate GLFW, clearing any resources allocated by GLFW.
+        glfwDestroyWindow(window);
+        glfwTerminate();
+        return 0;
     }
-    
-    // Properly de-allocate all resources once they've outlived their purpose
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteBuffers(1, &VBO);
+    else {
+        holeTest();
+        return 0;
+    }
 
-    // Terminate GLFW, clearing any resources allocated by GLFW.
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    return 0;
 }
 
 int main2() {
@@ -188,10 +194,7 @@ int main2() {
 
 }
 
-int main() {
-    holeTest();
-    return 0;
-}
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);

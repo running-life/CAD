@@ -48,26 +48,43 @@ public:
 		
 		// find half-edge who points to v1
 		HalfEdge* hePointToV1 = this->findHED(v1, v2);
+
+
+
 		// find half-edge who points to v2
 		HalfEdge* hePointToV2 = this->findHED(v2, v1);
-		
+		Loop* newLoop = new Loop();
 
 		HalfEdge* hePointToV1Nxt = hePointToV1->nxt;
 		HalfEdge* hePointToV2Nxt = hePointToV2->nxt;
+		
+		if(hePointToV1->nxt != hePointToV1->twin && hePointToV2->nxt == hePointToV2->twin){
+			hePointToV1->nxt->twin->nxt = newEdge->firstHalfEdge;
+			newEdge->firstHalfEdge = hePointToV1->nxt->twin->nxt;
+			newEdge->firstHalfEdge->nxt = hePointToV2->twin;
+			hePointToV2->twin->pre = newEdge->firstHalfEdge->nxt;
 
-		// add the half-edge from v1 to v2
-		hePointToV1->nxt = newEdge->firstHalfEdge;
-		newEdge->firstHalfEdge->pre = hePointToV1;
-		newEdge->firstHalfEdge->nxt = hePointToV2Nxt;
-		hePointToV2Nxt->pre = newEdge->firstHalfEdge;
+			newLoop->lHalfEdges = newEdge->secondHalfEdge;
+			newEdge->secondHalfEdge->nxt = hePointToV1->twin;
+			hePointToV1->twin->pre = newEdge->secondHalfEdge;
+			newEdge->secondHalfEdge->pre = hePointToV2;
+			hePointToV2->nxt = newEdge->secondHalfEdge;
+		}
+		else {
+			// add the half-edge from v1 to v2
+			hePointToV1->nxt = newEdge->firstHalfEdge;
+			newEdge->firstHalfEdge->pre = hePointToV1;
+			newEdge->firstHalfEdge->nxt = hePointToV2Nxt;
+			hePointToV2Nxt->pre = newEdge->firstHalfEdge;
 
-		// make a new loop
-		Loop* newLoop = new Loop();
-		newLoop->lHalfEdges = newEdge->secondHalfEdge;
-		newEdge->secondHalfEdge->nxt = hePointToV1Nxt;
-		hePointToV1Nxt->pre = newEdge->secondHalfEdge;
-		newEdge->secondHalfEdge->pre = hePointToV2;
-		hePointToV2->nxt = newEdge->secondHalfEdge;
+			// make a new loop
+
+			newLoop->lHalfEdges = newEdge->secondHalfEdge;
+			newEdge->secondHalfEdge->nxt = hePointToV1Nxt;
+			hePointToV1Nxt->pre = newEdge->secondHalfEdge;
+			newEdge->secondHalfEdge->pre = hePointToV2;
+			hePointToV2->nxt = newEdge->secondHalfEdge;
+		}
 
 		return newLoop;
 	}
@@ -82,8 +99,6 @@ public:
 	Loop* deleteEdgeSplitLoop(Vertex* v1, Vertex* v2, Edge*& edge) {
 		// find the half-edge from v1 to v2
 		HalfEdge* heV1ToV2 = findHE(v1, v2);
-
-		std::cout << *heV1ToV2;
 
 		edge = heV1ToV2->edge;
 		
