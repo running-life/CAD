@@ -37,10 +37,20 @@ public:
 	*/
 	Loop* insertEdgeSplitLoop(Vertex* v1, Vertex* v2, Edge* newEdge) {
 
+		/**
+		 * bug exists
 		// find half-edge who points to v1
 		HalfEdge* hePointToV1 = this->findHE(v1);
 		// find half-edge who points to v2
 		HalfEdge* hePointToV2 = this->findHE(v2);
+		 *
+		 */
+		
+		// find half-edge who points to v1
+		HalfEdge* hePointToV1 = this->findHED(v1, v2);
+		// find half-edge who points to v2
+		HalfEdge* hePointToV2 = this->findHED(v2, v1);
+		
 
 		HalfEdge* hePointToV1Nxt = hePointToV1->nxt;
 		HalfEdge* hePointToV2Nxt = hePointToV2->nxt;
@@ -72,6 +82,9 @@ public:
 	Loop* deleteEdgeSplitLoop(Vertex* v1, Vertex* v2, Edge*& edge) {
 		// find the half-edge from v1 to v2
 		HalfEdge* heV1ToV2 = findHE(v1, v2);
+
+		std::cout << *heV1ToV2;
+
 		edge = heV1ToV2->edge;
 		
 		// inner ring
@@ -106,12 +119,34 @@ public:
 		return tempHE;
 	}
 
+	/**
+	 * @brief find the half-edge in certain direction
+	 * @param v1 the vertex which the target half-edge point to
+	 * @param v2 we should pass by v2 before find the target half-edge
+	 * @return the the target half-edge point to v1
+	*/
+	HalfEdge* findHED(Vertex* v1, Vertex* v2) {
+		HalfEdge* tempHe = lHalfEdges;
+		while (!tempHe) {
+			std::cout << "null" << std::endl;
+			return nullptr;
+		}
+		while (!(tempHe->v1 == v2 || tempHe->v2 == v2)) {
+			tempHe = tempHe->nxt;
+		}
+		while (tempHe->v2 != v1) {
+			tempHe = tempHe->nxt;
+		}
+		return tempHe;
+	}
+
 	HalfEdge* findHE(Vertex* v1, Vertex* v2) {
 		HalfEdge* tempHe = lHalfEdges;
 		while (!tempHe) {
+			std::cout << "null" << std::endl;
 			return nullptr;
 		}
-		while (tempHe->v1 != v1 && tempHe->v2 != v2) {
+		while (tempHe->v1 != v1 || tempHe->v2 != v2) {
 			tempHe = tempHe->nxt;
 		}
 		return tempHe;
