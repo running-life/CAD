@@ -115,6 +115,7 @@ public:
 		heV2ToV1->nxt->pre = heV1ToV2->pre;
 		heV1ToV2->pre->nxt = heV2ToV1->nxt;
 
+		lHalfEdges = heV1ToV2->pre;
 		return innerLoop;
 	}
 

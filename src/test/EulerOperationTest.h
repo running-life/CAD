@@ -102,7 +102,9 @@ Solid* holeTest() {
 	EulerOperation::mef(cubeVertex[7], cubeVertex[6], bottomFaceLoop, backFace);
 
 	Face* leftFace = nullptr;
-	EulerOperation::mef(cubeVertex[7], cubeVertex[4], bottomFaceLoop, leftFace);
+	EulerOperation::mef(cubeVertex[4], cubeVertex[7], bottomFaceLoop, leftFace);
+
+	std::cout << *leftFace;
 
 
 	// make hole
@@ -116,6 +118,7 @@ Solid* holeTest() {
 	Face* holeBottomFace = nullptr;
 	EulerOperation::mef(holeVertex[0], holeVertex[3], topFaceLoop, holeBottomFace);
 
+;
 	
 
 	Loop* topFaceInnerLoop = nullptr;
@@ -152,13 +155,11 @@ Solid* holeTest() {
 	Face* holeLeftFace = nullptr;
 	EulerOperation::mef(holeVertex[7], holeVertex[4], holeBottomFaceLoop, holeLeftFace);
 
-
+	
 
 	EulerOperation::kfmrh(bottomFace, holeBottomFace);
 
-	
 	std::cout << *cubeSolid;
-
 
 	return cubeSolid;
 }
