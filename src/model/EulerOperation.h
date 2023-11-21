@@ -83,54 +83,65 @@ public:
 		face2->fSolid->deleteFace(face2);
 	}
 
-	static void sweep(Face *face, Eigen::Vector3f& direction, double d) {
-		HalfEdge* he = nullptr;
-		bool flag = true;
-		for (Loop* loop = face->fLoopsOuter; flag || loop != face->fLoopsOuter; loop = loop->nextLoop) {
-			flag = false;
-			he = loop->lHalfEdges;
-			Vertex* v1 = he->v1;
-			Point newP(((v1->point->position) + d * direction).x(), ((v1->point->position) + d * direction).y(), ((v1->point->position) + d * direction).z());
-			HalfEdge* newHE = nullptr;
-			Vertex* v2 = nullptr;
-			mev(v1, newP, loop, v2);
-			he = he->nxt;
-			Vertex* v= he->v1;
-			while (v != v1) {
-				newP.setPosition(((v->point->position) + d * direction).x(), ((v->point->position) + d * direction).y(), ((v->point->position) + d * direction).z());
-				mev(v, newP, loop, v2);
-				Face* tempFace = nullptr;
-				mef(v2, v1, loop, tempFace);
-				he = he->nxt;
-				v = he->v1;
+	static void sweep(Face *face, Eigen::Vector3f direction, float d) {
+		Loop* outerLoop = face->fLoopsOuter;
+		Face* bottomFace = sweepLoop(outerLoop, direction, d);
+		Loop* innerLoop = face->fLoopsInner;
+		if (!innerLoop)
+			return;
+		Face* innerFace = sweepLoop(innerLoop, direction, d);
+		kfmrh(bottomFace, innerFace);
+		while (1) {
+			innerLoop = innerLoop->nextLoop;
+			if (innerLoop == face->fLoopsInner)
+				break;
+			Face* innerFace = sweepLoop(innerLoop, direction, d);
+			kfmrh(bottomFace, innerFace);
+		}
+	}
+
+private:
+	static Face* sweepLoop(Loop* loop, Eigen::Vector3f direction, float d) {
+		Eigen::Vector3f up = direction * d;
+		std::vector<Vertex*> allVertex = loop->getVertex();
+		// HalfEdge* he = loop->lHalfEdges;
+		// Vertex* originVertex = he->v1;
+		Vertex* preSweptVertex = nullptr;
+		Vertex* sweptVertex = nullptr;
+		Vertex* firstSweptVertex = nullptr;
+		Face* tempFace = nullptr;
+		//Point tempPoint = Point(originVertex->point->position + up);
+		//mev(originVertex, tempPoint, loop, sweptVertex);
+		//while (1) {
+		//	he = he->nxt;
+		//	if (he == loop->lHalfEdges)
+		//		break;
+		//	originVertex = he->v1;
+		//	preSweptVertex = sweptVertex;
+		//	Point tempPoint = Point(originVertex->point->position + up);
+		//	mev(originVertex, tempPoint, loop, sweptVertex);
+		//	Face* tempFace;
+		//	mef(sweptVertex, preSweptVertex, loop, tempFace);
+		//	std::cout << *tempFace;
+		//}
+		for (Vertex*& originVertex : allVertex) {
+			std::cout << "helo" << std::endl;
+			Point tempPoint = Point(originVertex->point->position + up);
+			mev(originVertex, tempPoint, loop, sweptVertex);
+			if (!preSweptVertex) {
+				std::cout << "every" << std::endl;
+				preSweptVertex = sweptVertex;
+				firstSweptVertex = sweptVertex;
+				continue;
 			}
-			Face* tempFace = nullptr;
-			mef(v1, v, loop, tempFace);
+
+			mef(preSweptVertex, sweptVertex, loop, tempFace);
+			//std::cout << *tempFace;
+			preSweptVertex = sweptVertex;
 		}
 
-		flag = true;
-		for (Loop* loop = face->fLoopsInner; flag || loop != face->fLoopsInner; loop = loop->nextLoop) {
-			flag = false;
-			he = loop->lHalfEdges;
-			Vertex* v1 = he->v1;
-			Point newP(((v1->point->position) + d * direction).x(), ((v1->point->position) + d * direction).y(), ((v1->point->position) + d * direction).z());
-			HalfEdge* newHE = nullptr;
-			Vertex* v2 = nullptr;
-			mev(v1, newP, loop, v2);
-			he = he->nxt;
-			Vertex* v = he->v1;
-			while (v != v1) {
-				newP.setPosition(((v->point->position) + d * direction).x(), ((v->point->position) + d * direction).y(), ((v->point->position) + d * direction).z());
-				mev(v, newP, loop, v2);
-				Face* tempFace = nullptr;
-				mef(v2, v1, loop, tempFace);
-				he = he->nxt;
-				v = he->v1;
-			}
-			Face* tempFace = nullptr;
-			mef(v1, v, loop, tempFace);
-		}
-
+		mef(preSweptVertex, firstSweptVertex, loop, tempFace);
+		return tempFace;
 	}
 	
 

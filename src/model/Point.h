@@ -6,6 +6,7 @@ public:
 	Point():position(0, 0, 0) {};
 	Point(const Point& p): position(p.x(), p.y(), p.z()) { }
 	Point(double x, double y, double z) : position(x, y, z) {};
+	Point(const Eigen::Vector3f& p):position(p){}
 	double x() const {
 		return position.x();
 	}

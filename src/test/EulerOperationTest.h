@@ -163,3 +163,32 @@ Solid* holeTest() {
 
 	return cubeSolid;
 }
+
+Solid* sweepTest() {
+	Point cubePoint[] = { {0.5, -0.5, 0.5}, {0.5, 0.5, 0.5}, {-0.5, 0.5, 0.5}, {-0.5, -0.5, 0.5},
+					 {0.5, -0.5, -0.5} , {0.5, 0.5, -0.5} , {-0.5, 0.5, -0.5} , {-0.5, -0.5, -0.5} };
+	Point holePoint[] = { {0.25, -0.25, 0.5}, {0.25, 0.25, 0.5}, {-0.25, 0.25, 0.5}, {-0.25, -0.25, 0.5},
+					 {0.25, -0.25, -0.5} , {0.25, 0.25, -0.5} , {-0.25, 0.25, -0.5} , {-0.25, -0.25, -0.5} };
+	Vertex* holeVertex[8] = {};
+	Vertex* cubeVertex[8] = {};
+	Solid* cubeSolid = nullptr;
+	Face* topFace = nullptr;
+	EulerOperation::mvfs(cubePoint[0], cubeVertex[0], cubeSolid, topFace);
+
+	Loop* topFaceLoop = new Loop();
+	topFace->addLoop(topFaceLoop);
+
+	EulerOperation::mev(cubeVertex[0], cubePoint[1], topFaceLoop, cubeVertex[1]);
+	EulerOperation::mev(cubeVertex[1], cubePoint[2], topFaceLoop, cubeVertex[2]);
+	EulerOperation::mev(cubeVertex[2], cubePoint[3], topFaceLoop, cubeVertex[3]);
+
+	Face* bottomFace = nullptr;
+	EulerOperation::mef(cubeVertex[3], cubeVertex[0], topFaceLoop, bottomFace);
+
+
+
+
+	EulerOperation::sweep(bottomFace, { 0.0f, 0.0f, -1.0f }, 1.0f);
+	
+	return cubeSolid;
+}

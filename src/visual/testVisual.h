@@ -15,7 +15,8 @@ double min(double x1, double x2, double x3);
 
 void visualCube(std::vector<Eigen::Vector3f>& allPoints, std::vector<unsigned int>& indices) {
 	//Solid* cube = constructCube();
-	Solid* cube = holeTest();
+	//Solid* cube = holeTest();
+	Solid* cube = sweepTest();
 	std::vector<Point*> outer;
 	std::vector<std::vector<Point*>> inner;
 	std::vector<Eigen::Vector3f> visualPoints;

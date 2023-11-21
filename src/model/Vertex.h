@@ -10,9 +10,13 @@ public:
 	Vertex(const Point& p) {
 		point = new Point(p);
 	}
-	~Vertex() {
-		delete point;
+	Vertex(const Eigen::Vector3f& p) {
+		point = new Point(p);
 	}
+	Vertex(const Vertex* v) {
+		point = new Point(*(v->point));
+	}
+
 
 	friend std::ostream& operator << (std::ostream& os, const Vertex& v) {
 		os << "(" << v.point->x() << ", " << v.point->y() << ", " << v.point->z() << ")";
