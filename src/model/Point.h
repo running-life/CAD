@@ -22,5 +22,5 @@ public:
 		position.z() = z;
 	}
 
-	Eigen::Vector3d position;
+	Eigen::Vector3f position;
 };

@@ -83,7 +83,7 @@ public:
 		face2->fSolid->deleteFace(face2);
 	}
 
-	static void sweep(Face *face, Eigen::Vector3d direction, double d) {
+	static void sweep(Face *face, Eigen::Vector3f& direction, double d) {
 		HalfEdge* he = nullptr;
 		bool flag = true;
 		for (Loop* loop = face->fLoopsOuter; flag || loop != face->fLoopsOuter; loop = loop->nextLoop) {

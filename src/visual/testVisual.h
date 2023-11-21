@@ -4,21 +4,21 @@
 #include <GL/glew.h>
 #include <algorithm>
 
-using vPoint = std::array<double, 2>;
+using vPoint = std::array<float, 2>;
 
-void setPointAndPolygon(std::vector<Point*>& outer, std::vector<std::vector<Point*>>& inner, std::vector<Eigen::Vector3d>& visualPoints, std::vector<std::vector<vPoint>>& polygon);
-void setPointAndPolygon(std::vector<Point*>& points, std::vector<Eigen::Vector3d>& visualPoints, std::vector<std::vector<vPoint>>& polygon);
+void setPointAndPolygon(std::vector<Point*>& outer, std::vector<std::vector<Point*>>& inner, std::vector<Eigen::Vector3f>& visualPoints, std::vector<std::vector<vPoint>>& polygon);
+void setPointAndPolygon(std::vector<Point*>& points, std::vector<Eigen::Vector3f>& visualPoints, std::vector<std::vector<vPoint>>& polygon);
 
 double max(double x1, double x2, double x3);
 double min(double x1, double x2, double x3);
 
 
-void visualCube(std::vector<Eigen::Vector3d>& allPoints, std::vector<unsigned int>& indices) {
+void visualCube(std::vector<Eigen::Vector3f>& allPoints, std::vector<unsigned int>& indices) {
 	//Solid* cube = constructCube();
 	Solid* cube = holeTest();
 	std::vector<Point*> outer;
 	std::vector<std::vector<Point*>> inner;
-	std::vector<Eigen::Vector3d> visualPoints;
+	std::vector<Eigen::Vector3f> visualPoints;
 	std::vector<std::vector<vPoint>> polygon;
 	int faceNum = cube->faceNum();
 	Face* currFace = cube->sFaces;
@@ -45,11 +45,11 @@ int visualCube(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO) {
 	Solid* cube = constructCube();
 	std::vector<Point*> outer;
 	std::vector<std::vector<Point*>> inner;
-	std::vector<Eigen::Vector3d> visualPoints;
+	std::vector<Eigen::Vector3f> visualPoints;
 	std::vector<std::vector<vPoint>> polygon;
 	int faceNum = cube->faceNum();
 	std::cout << "face num:" << faceNum << std::endl;
-	std::vector<Eigen::Vector3d> allPoints;
+	std::vector<Eigen::Vector3f> allPoints;
 	std::vector<unsigned int> indices;
 	Face* currFace = cube->sFaces;
 	for (int i = 0; i < faceNum; ++i) {
@@ -73,7 +73,7 @@ int visualCube(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO) {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, allPoints.size() * sizeof(Eigen::Vector3d), allPoints.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, allPoints.size() * sizeof(Eigen::Vector3f), allPoints.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLint), indices.data(), GL_STATIC_DRAW);
@@ -93,7 +93,7 @@ int visualCube(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO) {
 	return allPoints.size();
 }
 
-void setPointAndPolygon(std::vector<Point*>& outer, std::vector<std::vector<Point*>>& inner, std::vector<Eigen::Vector3d>& visualPoints, std::vector<std::vector<vPoint>>& polygon) {
+void setPointAndPolygon(std::vector<Point*>& outer, std::vector<std::vector<Point*>>& inner, std::vector<Eigen::Vector3f>& visualPoints, std::vector<std::vector<vPoint>>& polygon) {
 	setPointAndPolygon(outer, visualPoints, polygon);
 	for (auto& innerPoints : inner) {
 		// reverse
@@ -103,7 +103,7 @@ void setPointAndPolygon(std::vector<Point*>& outer, std::vector<std::vector<Poin
 	}
 }
 
-void setPointAndPolygon(std::vector<Point*>& points ,std::vector<Eigen::Vector3d>& visualPoints, std::vector<std::vector<vPoint>>& polygon) {
+void setPointAndPolygon(std::vector<Point*>& points ,std::vector<Eigen::Vector3f>& visualPoints, std::vector<std::vector<vPoint>>& polygon) {
 	int visualPointsSize = visualPoints.size();
 	int pointsSize = points.size();
 
@@ -117,12 +117,12 @@ void setPointAndPolygon(std::vector<Point*>& points ,std::vector<Eigen::Vector3d
 		ignoreDimension = 2;
 	
 	std::transform(std::begin(points), std::end(points), std::back_inserter(visualPoints), [](Point* p) {
-		return Eigen::Vector3d(p->position);
+		return Eigen::Vector3f(p->position);
 		});
 
 
 	std::vector<vPoint> tempvPoint;
-	std::transform(std::begin(visualPoints) + visualPointsSize, std::end(visualPoints), std::back_inserter(tempvPoint), [&](Eigen::Vector3d p){
+	std::transform(std::begin(visualPoints) + visualPointsSize, std::end(visualPoints), std::back_inserter(tempvPoint), [&](Eigen::Vector3f p){
 		
 		if (ignoreDimension == 0)
 			return vPoint({ p.y(), p.z() });
