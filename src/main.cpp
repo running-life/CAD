@@ -35,7 +35,7 @@ float lastFrame = 0.0f;
 
 int main()
 {
-    if (0) {
+    if (1) {
         glfwInit();
         // Set all the required options for GLFW
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -138,7 +138,7 @@ int main()
             shader.setMat4("model", test);
             shader.setMat4("projection", projection);
 
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, mindices.size() * 3, GL_UNSIGNED_INT, 0);
 
 
             // Swap the screen buffers
