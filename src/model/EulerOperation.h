@@ -49,6 +49,7 @@ public:
 		newFace->fSolid = loop->lFace->fSolid;
 		loop->lFace->fSolid->addEdge(edge);
 		loop->lFace->fSolid->addFace(newFace);
+		std::cout << loop->lFace->fSolid->faceNum() << std::endl;
 	}
 
 
@@ -87,6 +88,7 @@ public:
 		Loop* outerLoop = face->fLoopsOuter;
 		Face* bottomFace = sweepLoop(outerLoop, direction, d);
 		Loop* innerLoop = face->fLoopsInner;
+		return;
 		if (!innerLoop)
 			return;
 		Face* innerFace = sweepLoop(innerLoop, direction, d);
@@ -104,42 +106,24 @@ private:
 	static Face* sweepLoop(Loop* loop, Eigen::Vector3f direction, float d) {
 		Eigen::Vector3f up = direction * d;
 		std::vector<Vertex*> allVertex = loop->getVertex();
-		// HalfEdge* he = loop->lHalfEdges;
-		// Vertex* originVertex = he->v1;
+
 		Vertex* preSweptVertex = nullptr;
 		Vertex* sweptVertex = nullptr;
 		Vertex* firstSweptVertex = nullptr;
-		Face* tempFace = nullptr;
-		//Point tempPoint = Point(originVertex->point->position + up);
-		//mev(originVertex, tempPoint, loop, sweptVertex);
-		//while (1) {
-		//	he = he->nxt;
-		//	if (he == loop->lHalfEdges)
-		//		break;
-		//	originVertex = he->v1;
-		//	preSweptVertex = sweptVertex;
-		//	Point tempPoint = Point(originVertex->point->position + up);
-		//	mev(originVertex, tempPoint, loop, sweptVertex);
-		//	Face* tempFace;
-		//	mef(sweptVertex, preSweptVertex, loop, tempFace);
-		//	std::cout << *tempFace;
-		//}
+		
 		for (Vertex*& originVertex : allVertex) {
-			std::cout << "helo" << std::endl;
+			Face* tempFace = nullptr;
 			Point tempPoint = Point(originVertex->point->position + up);
 			mev(originVertex, tempPoint, loop, sweptVertex);
 			if (!preSweptVertex) {
-				std::cout << "every" << std::endl;
 				preSweptVertex = sweptVertex;
 				firstSweptVertex = sweptVertex;
 				continue;
 			}
-
 			mef(preSweptVertex, sweptVertex, loop, tempFace);
-			//std::cout << *tempFace;
 			preSweptVertex = sweptVertex;
 		}
-
+		Face* tempFace = nullptr;
 		mef(preSweptVertex, firstSweptVertex, loop, tempFace);
 		return tempFace;
 	}

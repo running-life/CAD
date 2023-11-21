@@ -186,9 +186,30 @@ Solid* sweepTest() {
 	EulerOperation::mef(cubeVertex[3], cubeVertex[0], topFaceLoop, bottomFace);
 
 
+	//EulerOperation::mev(cubeVertex[0], holePoint[0], topFaceLoop, holeVertex[0]);
+	//EulerOperation::mev(holeVertex[0], holePoint[1], topFaceLoop, holeVertex[1]);
+	//EulerOperation::mev(holeVertex[1], holePoint[2], topFaceLoop, holeVertex[2]);
+	//EulerOperation::mev(holeVertex[2], holePoint[3], topFaceLoop, holeVertex[3]);
 
+
+	//Face* holeBottomFace = nullptr;
+	//EulerOperation::mef(holeVertex[0], holeVertex[3], topFaceLoop, holeBottomFace);
+
+
+	//Loop* topFaceInnerLoop = nullptr;
+
+
+	//EulerOperation::kemr(cubeVertex[0], holeVertex[0], topFaceLoop, topFaceInnerLoop);
+
+	//std::cout << "face_num" << cubeSolid->faceNum() << std::endl;
+
+	//EulerOperation::kfmrh(bottomFace, holeBottomFace);
+
+	std::cout << *bottomFace;
 
 	EulerOperation::sweep(bottomFace, { 0.0f, 0.0f, -1.0f }, 1.0f);
 	
+	
+
 	return cubeSolid;
 }
