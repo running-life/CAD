@@ -56,7 +56,6 @@ Solid* constructCube() {
 	return cubeSolid;
 }
 
-
 Solid* holeTest() {
 	Point cubePoint[] = { {0.5, -0.5, 0.5}, {0.5, 0.5, 0.5}, {-0.5, 0.5, 0.5}, {-0.5, -0.5, 0.5},
 					 {0.5, -0.5, -0.5} , {0.5, 0.5, -0.5} , {-0.5, 0.5, -0.5} , {-0.5, -0.5, -0.5} };
@@ -186,10 +185,10 @@ Solid* sweepTest() {
 	EulerOperation::mef(cubeVertex[3], cubeVertex[0], topFaceLoop, bottomFace);
 
 
-	//EulerOperation::mev(cubeVertex[0], holePoint[0], topFaceLoop, holeVertex[0]);
-	//EulerOperation::mev(holeVertex[0], holePoint[1], topFaceLoop, holeVertex[1]);
-	//EulerOperation::mev(holeVertex[1], holePoint[2], topFaceLoop, holeVertex[2]);
-	//EulerOperation::mev(holeVertex[2], holePoint[3], topFaceLoop, holeVertex[3]);
+	EulerOperation::mev(cubeVertex[0], holePoint[0], topFaceLoop, holeVertex[0]);
+	EulerOperation::mev(holeVertex[0], holePoint[1], topFaceLoop, holeVertex[1]);
+	EulerOperation::mev(holeVertex[1], holePoint[2], topFaceLoop, holeVertex[2]);
+	EulerOperation::mev(holeVertex[2], holePoint[3], topFaceLoop, holeVertex[3]);
 
 
 	//Face* holeBottomFace = nullptr;
@@ -201,14 +200,15 @@ Solid* sweepTest() {
 
 	//EulerOperation::kemr(cubeVertex[0], holeVertex[0], topFaceLoop, topFaceInnerLoop);
 
-	//std::cout << "face_num" << cubeSolid->faceNum() << std::endl;
-
+	//std::cout << bottomFace;
+	//std::cout << *bottomFace;
 	//EulerOperation::kfmrh(bottomFace, holeBottomFace);
-
+	//std::cout << bottomFace;
 	std::cout << *bottomFace;
 
 	EulerOperation::sweep(bottomFace, { 0.0f, 0.0f, -1.0f }, 1.0f);
 	
+	//std::cout << *cubeSolid;
 	
 
 	return cubeSolid;

@@ -13,10 +13,28 @@ double max(double x1, double x2, double x3);
 double min(double x1, double x2, double x3);
 
 
-void visualCube(std::vector<Eigen::Vector3f>& allPoints, std::vector<unsigned int>& indices) {
+void visualCube(std::vector<Eigen::Vector3f>& allPoints, std::vector<unsigned int>& indices, int switchKey) {
+	Solid* cube = nullptr;
+	switch (switchKey)
+	{
+	case 0:
+		cube = constructCube();
+		break;
+	case 1:
+		cube = holeTest();
+		break;
+	case 2:
+		cube = sweepTest();
+		
+		break;
+	default:
+		cube = constructCube();
+		std::cout << "2" << std::endl;
+		break;
+	}
 	//Solid* cube = constructCube();
 	//Solid* cube = holeTest();
-	Solid* cube = sweepTest();
+	//Solid* cube = sweepTest();
 	std::vector<Point*> outer;
 	std::vector<std::vector<Point*>> inner;
 	std::vector<Eigen::Vector3f> visualPoints;

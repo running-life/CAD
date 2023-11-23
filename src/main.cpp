@@ -32,6 +32,9 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+bool needCalculate = true;
+int switchKey = 0;
+
 
 int main()
 {
@@ -70,39 +73,9 @@ int main()
     glGenBuffers(1, &EBO);
     std::vector<Eigen::Vector3f> mallPoints;
     std::vector<unsigned int> mindices;
-    visualCube(mallPoints, mindices);
-
     std::vector<GLfloat> mvertices;
-    for (const auto& v : mallPoints) {
-        mvertices.push_back(static_cast<GLfloat>(v.x()));
-        mvertices.push_back(static_cast<GLfloat>(v.y()));
-        mvertices.push_back(static_cast<GLfloat>(v.z()));
-    }
+    
 
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, mvertices.size() * sizeof(GL_FLOAT), mvertices.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mindices.size() * sizeof(unsigned int), mindices.data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-    glEnableVertexAttribArray(0);
-
-
-
-    // position
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (GLvoid*)0);
-    //glEnableVertexAttribArray(0);
-    // color
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
-
-
-
-    // Game loop
 
     Eigen::Matrix4f projection = getProjectionMatrixTest();
     Eigen::Matrix4f view = camera.GetViewMatrix();
@@ -117,6 +90,31 @@ int main()
         // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
         processInput(window);
+
+        if (needCalculate) {
+            mallPoints.clear();
+            mindices.clear();
+            mvertices.clear();
+            needCalculate = false;
+            visualCube(mallPoints, mindices, switchKey);
+
+            for (const auto& v : mallPoints) {
+                mvertices.push_back(static_cast<GLfloat>(v.x()));
+                mvertices.push_back(static_cast<GLfloat>(v.y()));
+                mvertices.push_back(static_cast<GLfloat>(v.z()));
+            }
+
+            glBindVertexArray(VAO);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, mvertices.size() * sizeof(GL_FLOAT), mvertices.data(), GL_STATIC_DRAW);
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, mindices.size() * sizeof(unsigned int), mindices.data(), GL_STATIC_DRAW);
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+            glEnableVertexAttribArray(0);
+        }
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -157,11 +155,6 @@ int main()
 }
 
 
-int main1() {
-    sweepTest();
-    return 0;
-}
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
@@ -199,7 +192,18 @@ void processInput(GLFWwindow* window) {
         camera.ProcessKeyBoard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyBoard(RIGHT, deltaTime);
-
+    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+        needCalculate = true;
+        switchKey = 0;
+    }
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+        needCalculate = true;
+        switchKey = 1;
+    }
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+        needCalculate = true;
+        switchKey = 2;
+    }
 
 }
 

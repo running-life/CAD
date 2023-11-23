@@ -49,7 +49,6 @@ public:
 		newFace->fSolid = loop->lFace->fSolid;
 		loop->lFace->fSolid->addEdge(edge);
 		loop->lFace->fSolid->addFace(newFace);
-		std::cout << loop->lFace->fSolid->faceNum() << std::endl;
 	}
 
 
@@ -88,12 +87,15 @@ public:
 		Loop* outerLoop = face->fLoopsOuter;
 		Face* bottomFace = sweepLoop(outerLoop, direction, d);
 		Loop* innerLoop = face->fLoopsInner;
-		return;
-		if (!innerLoop)
+		if (!innerLoop) {
+			std::cout << "yes" << std::endl;
 			return;
+		}
+		
 		Face* innerFace = sweepLoop(innerLoop, direction, d);
 		kfmrh(bottomFace, innerFace);
 		while (1) {
+			std::cout << "inner" << std::endl;
 			innerLoop = innerLoop->nextLoop;
 			if (innerLoop == face->fLoopsInner)
 				break;
@@ -103,6 +105,11 @@ public:
 	}
 
 private:
+	/**
+	 * @brief sweep a loop
+	 * @param loop 
+	 * @return the bottom face
+	*/
 	static Face* sweepLoop(Loop* loop, Eigen::Vector3f direction, float d) {
 		Eigen::Vector3f up = direction * d;
 		std::vector<Vertex*> allVertex = loop->getVertex();

@@ -20,7 +20,6 @@ public:
 		face->preFace = sFaces->preFace;
 		sFaces->preFace->nextFace = face;
 		sFaces->preFace = face;
-		std::cout << "add face" << std::endl;
 	}
 
 	void deleteFace(Face* face) {
